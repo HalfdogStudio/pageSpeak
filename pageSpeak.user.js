@@ -1,15 +1,14 @@
 // ==UserScript==
 // @name        pageSpeak
-// @name:zh-cn  中英文语音合成选读
+// @name:zh-CN  中英文语音合成选读
 // @namespace   tts@reverland.org
 // @description text to speech Service from responsivevoice.org to read aloud the page
-// @description:zh-cn    调用responsivevoice.org的语音合成服务朗读选中文本
+// @description:zh-CN    调用responsivevoice.org的语音合成服务朗读选中文本
 // @include     *
 // @version     1.0
 // @grant       GM_xmlhttpRequest
 // @grant       GM_registerMenuCommand
 // ==/UserScript==
-//FIXME: 对中文和英文分别处理
 
 window.document.body.addEventListener("keyup", toggleTTS, true);
 //window.document.body.addEventListener("mouseup", tts, false);
