@@ -81,7 +81,8 @@ function *split(text, maxLength) {
       step = maxLength;
       counter++;
       // search step;
-      for (let i =0; i < (((text.length - index) < 5)?(text.length - index):5); i++) {
+      // dirty hack 10 is ok!
+      for (let i =0; i < (((text.length - index) < 10)?(text.length - index):10); i++) {
         if (/^[\s.,?!]+$/m.test(text.substr(index + step, 1))) {
           step += 1
           break;
@@ -99,7 +100,7 @@ function *split(text, maxLength) {
     }
   } else {
     // chinese!
-    var reg = /[a-zA-Z\*\-\+\/-\\(\\)@#$%^&*{}[]:;"'<>\s]+/g
+    var reg = /[a-zA-Z\s]+/g
     var counter = 0;
     while (index < text.length && counter < 20) {
       counter++;
