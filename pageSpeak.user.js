@@ -5,7 +5,7 @@
 // @description text to speech Service from responsivevoice.org to read aloud the page
 // @description:zh-CN    调用responsivevoice.org的语音合成服务朗读选中文本
 // @include     *
-// @version     1.0
+// @version     1.1
 // @grant       GM_xmlhttpRequest
 // @grant       GM_registerMenuCommand
 // ==/UserScript==
