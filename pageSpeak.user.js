@@ -22,6 +22,8 @@ progressBar.style.bottom = "0";
 progressBar.style.display = "none";
 progressBar.style.zIndex = "99999";
 document.body.appendChild(progressBar);
+// 播放状态
+var playing = false;
 
 function toggleTTS(e) {
   if (e && e.which == 69 && e.ctrlKey || !e) {//ctrl-e
@@ -43,7 +45,7 @@ function tts(e) {
     return;
   }
   progressBar.style.display = "block";
-  console.log("text to speech: ", text);
+  //console.log("text to speech: ", text);
   play(text);
 }
 
@@ -120,7 +122,7 @@ function *split(text, maxLength) {
 
 function play(text) {
   //console.log("[DEBUG] PLAYOUND")
-  var context = new AudioContext()
+  var context = new AudioContext();
   var voices = [];
   //var reg = /[\u4E00-\u9FD5]+/g
   var reg = /[\u4E00-\u9FCC]+/g
@@ -136,14 +138,14 @@ function play(text) {
     //var soundUrl = `https://code.responsivevoice.org/getvoice.php?t=${s}&tl=${LANG}&sv=&vn=&pitch=0.5&rate=0.5&vol=1`
     var soundUrl = `https://code.responsivevoice.org/develop/getvoice.php?t=${s}&tl=${LANG}&sv=&vn=&pitch=0.5&rate=0.5&vol=1`
     var p = new Promise(function(resolve, reject) {
-      console.log("text parts: ", s);
+      // console.log("text parts: ", s);
       var ret = GM_xmlhttpRequest({
         method: "GET",
         url: soundUrl,
         responseType: 'arraybuffer',
         onload: function(res) {
           try {
-            console.log("get data", res.statusText);
+            // console.log("get data", res.statusText);
             resolve(res.response);
             progressBar.setAttribute('value', progressBar.getAttribute('value') + 1);
           } catch(e) {
@@ -165,12 +167,23 @@ function play(text) {
     var blob = new Blob(bufferList, {type: 'application/octet-binary'});
     reader.addEventListener("loadend", function() {
       var buffer = reader.result;
-      console.log("final ArrayBuffer:", buffer);
+      //console.log("final ArrayBuffer:", buffer);
       context.decodeAudioData(buffer, function(buffer) {
-        var source = context.createBufferSource();
+        if (playing) {
+          console.log('playing: ', playing);
+          try {
+            source.stop();
+            playing = false;
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        source = context.createBufferSource();
         source.buffer = buffer;
         source.connect(context.destination);
         source.start(0);
+        playing = true;
+        source.onended = () => {playing = false;}
       })
     });
     reader.readAsArrayBuffer(blob);
